@@ -269,6 +269,7 @@ GameObject:
   m_Component:
   - component: {fileID: 801981636}
   - component: {fileID: 801981637}
+  - component: {fileID: 801981638}
   m_Layer: 0
   m_Name: InputController
   m_TagString: Untagged
@@ -303,8 +304,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CubePrefab: {fileID: 7381076494156318408, guid: df1b8c075b7228a419b6176ec6003b73, type: 3}
-  ObjectPalette: {fileID: 0}
   TileSize: 1
+--- !u!114 &801981638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801981635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5679edec8b96ec48938523b8640b781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prefabs:
+  - {fileID: 219009314016464473, guid: 980a61cc4856a3542a150af5e715d995, type: 3}
+  - {fileID: 6134518941527206764, guid: 8ee2f06f6a31a2e408cec12701f37d78, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

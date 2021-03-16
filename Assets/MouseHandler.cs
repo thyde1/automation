@@ -23,6 +23,11 @@ public class MouseHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (this.paintPrefab == null)
+        {
+            this.SetGhost();
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             this.HandleRotate();
@@ -99,6 +104,11 @@ public class MouseHandler : MonoBehaviour
     {
         GameObject.Destroy(this.paintGhost);
         this.paintPrefab = this.objectPalette.CurrentObject;
+        if (this.paintPrefab == null)
+        {
+            return;
+        }
+
         this.paintGhost = GameObject.Instantiate(this.paintPrefab, new Vector3(0, this.CubePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.extents.y, 0), Quaternion.identity);
         var ghostRenderer = this.paintGhost.GetComponent<MeshRenderer>();
         var paintObjectColor = ghostRenderer.material.color;
