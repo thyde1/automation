@@ -7,9 +7,15 @@ public class WorldController : MonoBehaviour
     private Dictionary<(int, int), GameObject> objects = new Dictionary<(int, int), GameObject>();
     private Dictionary<(int, int), List<GameObject>> resources = new Dictionary<(int, int), List<GameObject>>();
 
-    public void AddObject(GameObject obj)
+    public GameObject AddObject(GameObject template, Vector3 position, Quaternion rotation)
     {
-        var intPosition = GetIntPosition(obj);
+        var intPosition = GetIntPosition(position);
+        if (this.objects.TryGetValue(intPosition, out var existing) && existing != null)
+        {
+            return null;
+        }
+
+        var obj = GameObject.Instantiate(template, position, rotation);
         if (this.objects.ContainsKey(intPosition))
         {
             this.objects[intPosition] = obj;
@@ -18,17 +24,25 @@ public class WorldController : MonoBehaviour
         {
             this.objects.Add(intPosition, obj);
         }
+
+        return obj;
     }
 
-    public void AddResource(GameObject obj)
+    public void AddResource(GameObject obj, Vector3 position)
     {
-        var intPosition = GetIntPosition(obj);
+        var intPosition = GetIntPosition(position);
         if (!this.resources.ContainsKey(intPosition))
         {
             this.resources.Add(intPosition, new List<GameObject>());
         }
 
-        this.resources[intPosition].Add(obj);
+        if (this.resources[intPosition].Count > 0)
+        {
+            return;
+        }
+
+        var newResource = GameObject.Instantiate(obj, position, Quaternion.identity);
+        this.resources[intPosition].Add(newResource);
     }
 
     public GameObject GetGameObject((int, int) position)
@@ -60,6 +74,12 @@ public class WorldController : MonoBehaviour
     {
         var oldIntPosition = GetIntPosition(resource);
         var newIntPosition = GetIntPosition(newPosition);
+
+        if (oldIntPosition != newIntPosition && this.GetResources(newIntPosition).Count > 0)
+        {
+            return;
+        }
+
         if (oldIntPosition != newIntPosition)
         {
             var oldDictionaryList = this.resources[oldIntPosition];

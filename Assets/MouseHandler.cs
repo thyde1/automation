@@ -62,8 +62,12 @@ public class MouseHandler : MonoBehaviour
 
     private void HandleClick()
     {
-        var obj = GameObject.Instantiate(this.paintPrefab, this.paintGhost.transform.position, this.paintGhost.transform.rotation);
-        this.worldController.AddObject(obj);
+        var obj = this.worldController.AddObject(this.paintPrefab, this.paintGhost.transform.position, this.paintGhost.transform.rotation);
+        if (obj == null)
+        {
+            return;
+        }
+
         var objectScripts = obj.GetComponents<ObjectScript>();
         foreach (var script in objectScripts)
         {
@@ -74,8 +78,7 @@ public class MouseHandler : MonoBehaviour
     private void HandleRightClick()
     {
         var resourcePosition = this.paintGhost.transform.position + new Vector3(0, this.paintGhost.GetComponent<MeshFilter>().sharedMesh.bounds.size.y, 0);
-        var resource = GameObject.Instantiate(this.CubePrefab, resourcePosition, this.paintGhost.transform.rotation);
-        this.worldController.AddResource(resource);
+        this.worldController.AddResource(this.CubePrefab, resourcePosition);
     }
 
     private static Vector3 GetMousePositionOnPlane()

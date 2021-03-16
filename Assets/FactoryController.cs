@@ -26,7 +26,7 @@ public class FactoryController : MonoBehaviour, ObjectScript
             this.productionCountdown -= Time.deltaTime;
             if (this.productionCountdown <= 0)
             {
-                this.worldController.AddResource(GameObject.Instantiate(this.producedResource, this.transform.position + this.transform.forward, Quaternion.identity));
+                this.worldController.AddResource(this.producedResource, this.transform.position + this.transform.forward);
                 this.productionCountdown = this.ProductionSeconds;
             }
         }
