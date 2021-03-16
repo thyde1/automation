@@ -10,10 +10,12 @@ public class MouseHandler : MonoBehaviour
     private GameObject paintPrefab;
     private GameObject paintGhost;
     private float currentRotation = 0;
+    private WorldController worldController;
 
     // Start is called before the first frame update
     void Start()
     {
+        this.worldController = GameObject.FindObjectOfType<WorldController>();
         this.paintPrefab = this.ConveyorPrefab;
         this.paintGhost = GameObject.Instantiate(this.paintPrefab, new Vector3(0, this.CubePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.extents.y, 0), Quaternion.identity);
         var ghostRenderer = this.paintGhost.GetComponent<MeshRenderer>();
@@ -38,6 +40,11 @@ public class MouseHandler : MonoBehaviour
         {
             this.HandleClick();
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            this.HandleRightClick();
+        }
     }
 
     private void HandleRotate()
@@ -47,7 +54,20 @@ public class MouseHandler : MonoBehaviour
 
     private void HandleClick()
     {
-        GameObject.Instantiate(this.paintPrefab, this.paintGhost.transform.position, this.paintGhost.transform.rotation);
+        var obj = GameObject.Instantiate(this.paintPrefab, this.paintGhost.transform.position, this.paintGhost.transform.rotation);
+        this.worldController.AddObject(obj);
+        var objectScripts = obj.GetComponents<ObjectScript>();
+        foreach (var script in objectScripts)
+        {
+            script.Activated = true;
+        }
+    }
+
+    private void HandleRightClick()
+    {
+        var resourcePosition = this.paintGhost.transform.position + new Vector3(0, this.paintGhost.GetComponent<MeshFilter>().sharedMesh.bounds.size.y, 0);
+        var resource = GameObject.Instantiate(this.CubePrefab, resourcePosition, this.paintGhost.transform.rotation);
+        this.worldController.AddResource(resource);
     }
 
     private static Vector3 GetMousePositionOnPlane()
