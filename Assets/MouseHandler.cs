@@ -5,8 +5,8 @@ using UnityEngine;
 public class MouseHandler : MonoBehaviour
 {
     public GameObject CubePrefab;
-    public GameObject ConveyorPrefab;
     public float TileSize = 1;
+    private ObjectPalette objectPalette;
     private GameObject paintPrefab;
     private GameObject paintGhost;
     private float currentRotation = 0;
@@ -16,11 +16,8 @@ public class MouseHandler : MonoBehaviour
     void Start()
     {
         this.worldController = GameObject.FindObjectOfType<WorldController>();
-        this.paintPrefab = this.ConveyorPrefab;
-        this.paintGhost = GameObject.Instantiate(this.paintPrefab, new Vector3(0, this.CubePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.extents.y, 0), Quaternion.identity);
-        var ghostRenderer = this.paintGhost.GetComponent<MeshRenderer>();
-        var paintObjectColor = ghostRenderer.material.color;
-        ghostRenderer.material.color = new Color(paintObjectColor.r, paintObjectColor.g, paintObjectColor.b, 0.5f);
+        this.objectPalette = gameObject.GetComponent<ObjectPalette>();
+        this.SetGhost();
     }
 
     // Update is called once per frame
@@ -31,10 +28,21 @@ public class MouseHandler : MonoBehaviour
             this.HandleRotate();
         }
 
+        var numberPressed = NumberKeyReader.ReadKey();
+        if (numberPressed > -1)
+        {
+            this.objectPalette.SelectByIndex(numberPressed);
+            this.SetGhost();
+        }
+
         var rawMousePositionOnPlane = GetMousePositionOnPlane();
         var snappedMousePositionOnPlane = new Vector3(Mathf.Round(rawMousePositionOnPlane.x), rawMousePositionOnPlane.y, Mathf.Round(rawMousePositionOnPlane.z));
-        this.paintGhost.transform.position = snappedMousePositionOnPlane + new Vector3(0, this.paintGhost.GetComponent<MeshFilter>().sharedMesh.bounds.extents.y, 0);
-        this.paintGhost.transform.rotation = Quaternion.AngleAxis(currentRotation, Vector3.up);
+
+        if (this.paintGhost != null)
+        {
+            this.paintGhost.transform.position = snappedMousePositionOnPlane + new Vector3(0, this.paintGhost.GetComponent<MeshFilter>().sharedMesh.bounds.extents.y, 0);
+            this.paintGhost.transform.rotation = Quaternion.AngleAxis(currentRotation, Vector3.up);
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -82,5 +90,15 @@ public class MouseHandler : MonoBehaviour
         {
             return new Vector3();
         }
+    }
+
+    private void SetGhost()
+    {
+        GameObject.Destroy(this.paintGhost);
+        this.paintPrefab = this.objectPalette.CurrentObject;
+        this.paintGhost = GameObject.Instantiate(this.paintPrefab, new Vector3(0, this.CubePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.extents.y, 0), Quaternion.identity);
+        var ghostRenderer = this.paintGhost.GetComponent<MeshRenderer>();
+        var paintObjectColor = ghostRenderer.material.color;
+        ghostRenderer.material.color = new Color(paintObjectColor.r, paintObjectColor.g, paintObjectColor.b, 0.5f);
     }
 }

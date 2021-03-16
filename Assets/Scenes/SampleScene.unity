@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CubePrefab: {fileID: 7381076494156318408, guid: df1b8c075b7228a419b6176ec6003b73, type: 3}
-  ConveyorPrefab: {fileID: 219009314016464473, guid: 980a61cc4856a3542a150af5e715d995, type: 3}
+  ObjectPalette: {fileID: 0}
   TileSize: 1
 --- !u!1 &963194225
 GameObject:
