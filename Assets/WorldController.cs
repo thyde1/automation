@@ -55,6 +55,11 @@ public class WorldController : MonoBehaviour
         return null;
     }
 
+    public GameObject GetGameObject(GameObject obj)
+    {
+        return this.GetGameObject(GetIntPosition(obj));
+    }
+
     public List<GameObject> GetResources((int, int) position)
     {
         if (this.resources.TryGetValue(position, out var resources))
@@ -101,7 +106,7 @@ public class WorldController : MonoBehaviour
         return (Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
     }
 
-    private static (int, int) GetIntPosition(GameObject obj)
+    public static (int, int) GetIntPosition(GameObject obj)
     {
         return GetIntPosition(obj.transform.position);
     }
